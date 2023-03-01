@@ -1,1 +1,1 @@
-0x01. AirBnB clone
+Welcome to our Airbnb clone! This is a web application that allows users to search for and book accommodations that are listed on the platform, as well as create their own listings to rent out. The goal of this project is to provide a user-friendly platform that closely emulates the features and functionality of the original Airbnb website, while also offering unique features and customizations. Whether you're a traveler looking for a place to stay or a host looking to list your property, our Airbnb clone has you covered.
