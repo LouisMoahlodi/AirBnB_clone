@@ -2,7 +2,8 @@ import unittest
 from datetime import datetime
 from datetime import timedelta
 from unittest.mock import patch
-from base_model import BaseModel  
+from base_model import BaseModel
+
 
 class TestBaseModel(unittest.TestCase):
     def setUp(self):
@@ -19,8 +20,6 @@ class TestBaseModel(unittest.TestCase):
     def test_updated_at_type(self):
         # Test if the updated_at attribute is of type datetime
         self.assertIsInstance(self.base_model.updated_at, datetime)
-
-    
 
     @patch('datetime.datetime')
     def test_save_method(self, mock_datetime):
@@ -43,6 +42,7 @@ class TestBaseModel(unittest.TestCase):
             'updated_at': self.base_model.updated_at.isoformat()
         }
         self.assertEqual(self.base_model.to_dict(), expected_dict)
+
 
 if __name__ == '__main__':
     unittest.main()
