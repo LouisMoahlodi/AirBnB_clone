@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+
 class BaseModel:
     """
     BaseModel class represents a base model for other classes.
@@ -25,11 +26,11 @@ class BaseModel:
         attributes to the current datetime.
         """
         # Generate a unique UUID for the instance
-        self.id = str(uuid.uuid4())  
+        self.id = str(uuid.uuid4())
         # Set creation time to current time
-        self.created_at = datetime.now()  
+        self.created_at = datetime.now()
         # Initially set update time to creation time
-        self.updated_at = self.created_at  
+        self.updated_at = self.created_at
 
     def __str__(self):
         """
@@ -45,7 +46,7 @@ class BaseModel:
         Updates the updated_at attribute with the current datetime.
         """
         # Update update time to current time
-        self.updated_at = datetime.now()  
+        self.updated_at = datetime.now()
 
     def to_dict(self):
         """
@@ -55,11 +56,11 @@ class BaseModel:
             dict: Dictionary representation of the BaseModel instance.
         """
         # Include class name in the dictionary
-        obj_dict = {'__class__': self.__class__.__name__}  
+        obj_dict = {'__class__': self.__class__.__name__}
         # Add instance attributes to the dictionary
-        obj_dict.update(self.__dict__)  
+        obj_dict.update(self.__dict__)
         # Convert creation time to ISO format string
-        obj_dict['created_at'] = self.created_at.isoformat()  
+        obj_dict['created_at'] = self.created_at.isoformat()
         # Convert update time to ISO format string
-        obj_dict['updated_at'] = self.updated_at.isoformat()  
+        obj_dict['updated_at'] = self.updated_at.isoformat()
         return obj_dict
