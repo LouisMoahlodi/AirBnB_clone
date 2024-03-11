@@ -43,8 +43,19 @@ class BaseModel:
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
 
+        # If args are passed and not empty, create the second BaseModel instance
+        if args:
+            # Get the dictionary representation of the first instance from args
+            first_instance_dict = args[0].to_dict()
+            # Create the second instance using the dictionary obtained from the first instance
+            self.__dict__.update(first_instance_dict)
+            # Ensure that the second instance has the same ID as the first instance
+            self.id = args[0].id
+
         # Generate a unique UUID for the instance
-        self.id = str(uuid.uuid4())
+        else:
+            self.id = str(uuid.uuid4())
+
         # Set creation time to current time
         self.created_at = datetime.now()
         # Initially set update time to creation time
@@ -71,7 +82,7 @@ class BaseModel:
         Returns a dictionary representation of the BaseModel instance.
 
         Returns:
-        dict: Dictionary representation of the BaseModel instance.
+            dict: Dictionary representation of the BaseModel instance.
         """
         # Add instance attributes to the dictionary
         obj_dict = self.__dict__.copy()
@@ -86,5 +97,3 @@ class BaseModel:
         obj_dict['updated_at'] = self.updated_at.isoformat()
     
         return obj_dict
-
-    
