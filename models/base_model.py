@@ -43,6 +43,7 @@ class BaseModel:
             # If kwargs is empty, create id and created_at attributes
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
+            self.updated_at = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
 
         # Generate a unique UUID for the instance
         self.id = str(uuid.uuid4())
