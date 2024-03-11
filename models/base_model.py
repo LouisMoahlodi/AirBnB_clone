@@ -30,22 +30,24 @@ class BaseModel:
         if args:
             pass
 
-        # Check if *kwargs is not empty 
+        # Check if *kwargs is not empty
         if kwargs:
             # Iterate through the key-value pairs in kwargs
             for attr, value in kwargs.items():
                 # Exclude '__class__' attribute
                 if attr != "__class__":
-                    # Convert created_at and updated_at strings to datetime objects
+                    # Convert created_at and updated_at strings to datetime
+                    # objects
                     if attr in ['created_at ', 'updated_at']:
-                        value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                        value = datetime.strptime(
+                            value, "%Y-%m-%dT%H:%M:%S.%f")
                         # Set attribute dynamically
-                        setattr(self, attr, value) 
+                        setattr(self, attr, value)
         # If kwargs is empty, create id and created_at attributes
         else:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
-             
+
         # Generate a unique UUID for the instance
         self.id = str(uuid.uuid4())
         # Set creation time to current time
