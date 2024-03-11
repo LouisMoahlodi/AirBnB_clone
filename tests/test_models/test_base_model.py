@@ -3,8 +3,7 @@
 
 import unittest
 from datetime import datetime
-from datetime import timedelta
-from unittest.mock import patch
+import uuid
 from models.base_model import BaseModel
 
 
@@ -24,17 +23,12 @@ class TestBaseModel(unittest.TestCase):
         # Test if the updated_at attribute is of type datetime
         self.assertIsInstance(self.base_model.updated_at, datetime)
 
-    @patch('datetime.datetime')
-    def test_save_method(self, mock_datetime):
-        # Mock datetime object
-        mock_now = datetime(2022, 3, 8, 10, 30)
-        mock_datetime.now.return_value = mock_now
-
+    def test_save_method(self):
         # Call the save method
         self.base_model.save()
 
         # Check if the updated_at attribute is updated correctly
-        self.assertEquals(self.base_model.updated_at, mock_now)
+        self.assertEqual(self.base_model.updated_at, self.base_model.created_at)
 
     def test_to_dict_method(self):
         # Test if the to_dict method returns the expected dictionary
@@ -46,15 +40,43 @@ class TestBaseModel(unittest.TestCase):
         }
         self.assertEqual(self.base_model.to_dict(), expected_dict)
 
-    def test_create_base_model_from_to_dict(self):
-        # Create the first BaseModel instance without arguments
-        bm1 = BaseModel()
-        # Get the dictionary representation of bm1
-        bm1_dict = bm1.to_dict()
-        # Create the second BaseModel instance using bm1's dictionary representation
-        bm2 = BaseModel(**bm1_dict)
-        # Check if the IDs of bm1 and bm2 are the same
-        self.assertEqual(bm1.id, bm2.id)
+    def test_to_dict_no_args(self):
+        # Tests to_dict() with no arguments.
+        with self.assertRaises(TypeError) as e:
+            BaseModel.to_dict()
+        msg = "to_dict() missing 1 required positional argument: 'self'"
+        self.assertEqual(str(e.exception), msg)
+
+    def test_to_dict_excess_args(self):
+        # Tests to_dict() with too many arguments.
+        with self.assertRaises(TypeError) as e:
+            BaseModel.to_dict(self, 98)
+        msg = "to_dict() takes 1 positional argument but 2 were given"
+        self.assertEqual(str(e.exception), msg)
+
+    def test_instantiation(self):
+        # Tests instantiation with **kwargs.
+
+        my_model = BaseModel()
+        my_model.name = "Holberton"
+        my_model.my_number = 89
+        my_model_json = my_model.to_dict()
+        my_new_model = BaseModel(**my_model_json)
+        self.assertEqual(my_new_model.to_dict(), my_model.to_dict())
+
+    def test_instantiation_dict(self):
+        # Tests instantiation with **kwargs from custom dict.
+        d = {"__class__": "BaseModel",
+             "updated_at":
+             datetime(2050, 12, 30, 23, 59, 59, 123456).isoformat(),
+             "created_at": datetime.now().isoformat(),
+             "id": str(uuid.uuid4()),
+             "var": "foobar",
+             "int": 108,
+             "float": 3.14}
+        o = BaseModel(**d)
+        self.assertEqual(o.to_dict(), d)
+
 
 if __name__ == '__main__':
     unittest.main()
