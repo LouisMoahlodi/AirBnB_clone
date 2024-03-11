@@ -1,8 +1,11 @@
+#!/usr/bin/python3
+"""Unittest module for the BaseModel Class."""
+
 import unittest
 from datetime import datetime
 from datetime import timedelta
 from unittest.mock import patch
-from base_model import BaseModel
+from models.base_model import BaseModel
 
 
 class TestBaseModel(unittest.TestCase):

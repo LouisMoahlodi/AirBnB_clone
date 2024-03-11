@@ -25,16 +25,20 @@ class BaseModel:
         attributes to the current datetime.
         """
 
-        if kwargs is not None and kwargs != {}:
-            for key in kwargs:
-                if key == "created_at":
-                    self.__dict__["created_at"] = datetime.strptime(
-                        kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
-                elif key == "updated_at":
-                    self.__dict__["updated_at"] = datetime.strptime(
-                        kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
-                else:
-                    self.__dict__[key] = kwargs[key]
+        # Check if kwargs is not empty
+        if kwargs:
+             # Exclude '__class__' attribute
+            del  kwargs['__class__']
+            # Iterate through the key-value pairs in kwargs
+            for attr, value in kwargs.items():
+                # Convert created_at and updated_at strings to datetime objects
+                if attr in ['created_at', 'updated_at']:
+                    date_obj = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    setattr(self, attr, date_obj)
+
+                # Set attribute dynamically
+                else: 
+                    setattr(self, attr, value)
         else:
             # If kwargs is empty, create id and created_at attributes
             self.id = str(uuid.uuid4())
