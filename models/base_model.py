@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime
 
-
 class BaseModel:
     """
     BaseModel class represents a base model for other classes.
@@ -26,25 +25,19 @@ class BaseModel:
         attributes to the current datetime.
         """
 
-        # *args will not be used
-        if args:
-            pass
-
-        # Check if *kwargs is not empty
+        # Check if kwargs is not empty
         if kwargs:
             # Iterate through the key-value pairs in kwargs
             for attr, value in kwargs.items():
                 # Exclude '__class__' attribute
                 if attr != "__class__":
-                    # Convert created_at and updated_at strings to datetime
-                    # objects
-                    if attr in ['created_at ', 'updated_at']:
-                        value = datetime.strptime(
-                            value, "%Y-%m-%dT%H:%M:%S.%f")
-                        # Set attribute dynamically
-                        setattr(self, attr, value)
-        # If kwargs is empty, create id and created_at attributes
+                    # Convert created_at and updated_at strings to datetime objects
+                    if attr in ['created_at', 'updated_at']:
+                        value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    # Set attribute dynamically
+                    setattr(self, attr, value)
         else:
+            # If kwargs is empty, create id and created_at attributes
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now().strftime("%Y-%m-%dT%H:%M:%S.%f")
 
@@ -88,10 +81,10 @@ class BaseModel:
         obj_dict['updated_at'] = self.updated_at.isoformat()
         return obj_dict
     
-# Create the first BaseModel instance without arguments
-first_base_model = BaseModel()
-# Call the .to_dict() method on the first instance to get a dictionary representation
-first_base_model_dict = first_base_model.to_dict()
-# Use the dictionary obtained from .to_dict() to create the second BaseModel instance
-second_base_model = BaseModel(**first_base_model_dict)
-
+if __name__ == "__main__":
+    # Create the first BaseModel instance without arguments
+    first_base_model = BaseModel()
+    # Call the .to_dict() method on the first instance to get a dictionary representation
+    first_base_model_dict = first_base_model.to_dict()
+    # Use the dictionary obtained from .to_dict() to create the second BaseModel instance
+    second_base_model = BaseModel(**{key: value for key, value in first_base_model_dict.items() if key != '__class__'})
