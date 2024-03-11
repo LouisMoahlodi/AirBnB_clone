@@ -27,13 +27,13 @@ class BaseModel:
 
         # Check if kwargs is not empty
         if kwargs:
+             # Exclude '__class__' attribute
+            del  kwargs['__class__']
             # Iterate through the key-value pairs in kwargs
             for attr, value in kwargs.items():
-                # Exclude '__class__' attribute
-                if attr != "__class__":
-                    # Convert created_at and updated_at strings to datetime objects
-                    if attr in ['created_at', 'updated_at']:
-                        value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                # Convert created_at and updated_at strings to datetime objects
+                if attr in ['created_at', 'updated_at']:
+                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                     # Set attribute dynamically
                     setattr(self, attr, value)
         else:
