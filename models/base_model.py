@@ -33,8 +33,11 @@ class BaseModel:
             for attr, value in kwargs.items():
                 # Convert created_at and updated_at strings to datetime objects
                 if attr in ['created_at', 'updated_at']:
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                    # Set attribute dynamically
+                    date_obj = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    setattr(self, attr, date_obj)
+
+                # Set attribute dynamically
+                else: 
                     setattr(self, attr, value)
         else:
             # If kwargs is empty, create id and created_at attributes
