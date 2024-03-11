@@ -46,6 +46,15 @@ class TestBaseModel(unittest.TestCase):
         }
         self.assertEqual(self.base_model.to_dict(), expected_dict)
 
+    def test_create_base_model_from_to_dict(self):
+        # Create the first BaseModel instance without arguments
+        bm1 = BaseModel()
+        # Get the dictionary representation of bm1
+        bm1_dict = bm1.to_dict()
+        # Create the second BaseModel instance using bm1's dictionary representation
+        bm2 = BaseModel(**bm1_dict)
+        # Check if the IDs of bm1 and bm2 are the same
+        self.assertEqual(bm1.id, bm2.id)
 
 if __name__ == '__main__':
     unittest.main()
