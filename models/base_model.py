@@ -27,8 +27,6 @@ class BaseModel:
 
         # Check if kwargs is not empty
         if kwargs:
-             # Exclude '__class__' attribute
-            del  kwargs['__class__']
             # Iterate through the key-value pairs in kwargs
             for attr, value in kwargs.items():
                 # Convert created_at and updated_at strings to datetime objects
@@ -73,22 +71,20 @@ class BaseModel:
         Returns a dictionary representation of the BaseModel instance.
 
         Returns:
-            dict: Dictionary representation of the BaseModel instance.
+        dict: Dictionary representation of the BaseModel instance.
         """
-        # Include class name in the dictionary
-        obj_dict = {'__class__': self.__class__.__name__}
         # Add instance attributes to the dictionary
-        obj_dict.update(self.__dict__)
+        obj_dict = self.__dict__.copy()
+        
+        # Remove the __class__ attribute if present
+        obj_dict.pop('__class__', None)
+        
         # Convert creation time to ISO format string
         obj_dict['created_at'] = self.created_at.isoformat()
+        
         # Convert update time to ISO format string
         obj_dict['updated_at'] = self.updated_at.isoformat()
-        return obj_dict
     
-if __name__ == "__main__":
-    # Create the first BaseModel instance without arguments
-    first_base_model = BaseModel()
-    # Call the .to_dict() method on the first instance to get a dictionary representation
-    first_base_model_dict = first_base_model.to_dict()
-    # Use the dictionary obtained from .to_dict() to create the second BaseModel instance
-    second_base_model = BaseModel(**{key: value for key, value in first_base_model_dict.items() if key != '__class__'})
+        return obj_dict
+
+    
