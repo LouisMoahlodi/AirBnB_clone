@@ -87,3 +87,11 @@ class BaseModel:
         # Convert update time to ISO format string
         obj_dict['updated_at'] = self.updated_at.isoformat()
         return obj_dict
+    
+# Create the first BaseModel instance without arguments
+first_base_model = BaseModel()
+# Call the .to_dict() method on the first instance to get a dictionary representation
+first_base_model_dict = first_base_model.to_dict()
+# Use the dictionary obtained from .to_dict() to create the second BaseModel instance
+second_base_model = BaseModel(**first_base_model_dict)
+
