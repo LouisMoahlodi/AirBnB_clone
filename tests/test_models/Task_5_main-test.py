@@ -1,5 +1,5 @@
-from engine.file_storage import FileStorage
-from base_model import BaseModel
+from models import storage
+from models.base_model import BaseModel
 
 all_objs = storage.all()
 print("-- Reloaded objects --")
