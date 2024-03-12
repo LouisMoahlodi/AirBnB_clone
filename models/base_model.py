@@ -25,6 +25,7 @@ class BaseModel:
         attributes to the current datetime.
         """
 
+
         # Check if kwargs is not empty
         if kwargs:
             # Iterate through the key-value pairs in kwargs
@@ -42,13 +43,6 @@ class BaseModel:
             self.__dict__['id'] = str(uuid.uuid4())
             self.__dict__['created_at'] = datetime.now()
             self.__dict__['updated_at'] = datetime.now()
-
-        # Generate a unique UUID for the instance
-        self.id = str(uuid.uuid4())
-        # Set creation time to current time
-        self.created_at = datetime.now()
-        # Initially set update time to creation time
-        self.updated_at = self.created_at
 
     def __str__(self):
         """
