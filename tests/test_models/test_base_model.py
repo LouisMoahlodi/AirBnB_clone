@@ -4,8 +4,10 @@
 import unittest
 from datetime import datetime
 import uuid
+import json
 from models.base_model import BaseModel
 from models import storage
+from models.engine.file_storage import FileStorage
 
 
 class TestBaseModel(unittest.TestCase):
