@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+
 import json
 import os
 import datetime
@@ -23,10 +23,6 @@ class FileStorage:
         try:
             with open(FileStorage.__file_path, 'r') as f:
                 FileStorage.__objects = json.load(f)
-                for o in FileStorage.__objects.values():
-                    cls_name = o["__class__"]
-                    del o["__class__"]
-                    self.new(eval(cls_name)(**o))
         
         except FileNotFoundError:
             pass
