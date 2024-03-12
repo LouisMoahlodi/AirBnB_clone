@@ -5,6 +5,7 @@ import unittest
 from datetime import datetime
 import uuid
 from models.base_model import BaseModel
+from models import storage
 
 
 class TestBaseModel(unittest.TestCase):
@@ -87,10 +88,9 @@ class TestBaseModel(unittest.TestCase):
         # Check if the IDs of bm1 and bm2 are the same
         self.assertEqual(bm1.id, bm2.id)
 
-if __name__ == '__main__':
-    unittest.main()
-
-
+    def test_storage_instance(self):
+        # Check if storage is an instance of FileStorage
+        self.assertIsInstance(storage, FileStorage)
 
 if __name__ == '__main__':
     unittest.main()
