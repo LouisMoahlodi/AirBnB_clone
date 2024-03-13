@@ -5,6 +5,7 @@ from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 import os
 
+
 class TestFileStorage(unittest.TestCase):
     def setUp(self):
         self.file_storage = FileStorage()
@@ -27,10 +28,12 @@ class TestFileStorage(unittest.TestCase):
         self.file_storage.new(self.base_model)
         objects = self.file_storage.all()
         self.assertIn("BaseModel." + self.base_model.id, objects)
-        self.assertEqual(objects["BaseModel." + self.base_model.id], self.base_model_dict)
+        self.assertEqual(objects["BaseModel." +
+                                 self.base_model.id], self.base_model_dict)
 
     def test_save(self):
-        # Test if save() serializes __objects to the JSON file (path: __file_path)
+        # Test if save() serializes __objects to the JSON file (path:
+        # __file_path)
         self.file_storage.new(self.base_model)
         self.file_storage.save()
         self.assertTrue(os.path.exists("file.json"))
@@ -42,7 +45,9 @@ class TestFileStorage(unittest.TestCase):
         self.file_storage.reload()
         objects = self.file_storage.all()
         self.assertIn("BaseModel." + self.base_model.id, objects)
-        self.assertEqual(objects["BaseModel." + self.base_model.id], self.base_model_dict)
+        self.assertEqual(objects["BaseModel." +
+                                 self.base_model.id], self.base_model_dict)
+
 
 if __name__ == '__main__':
     unittest.main()

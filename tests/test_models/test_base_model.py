@@ -31,7 +31,9 @@ class TestBaseModel(unittest.TestCase):
         self.base_model.save()
 
         # Check if the updated_at attribute is updated correctly
-        self.assertEqual(self.base_model.updated_at, self.base_model.created_at)
+        self.assertEqual(
+            self.base_model.updated_at,
+            self.base_model.created_at)
 
     def test_to_dict_method(self):
         # Test if the to_dict method returns the expected dictionary
@@ -83,9 +85,11 @@ class TestBaseModel(unittest.TestCase):
     def test_create_base_model_with_to_dict(self):
         # Create the first BaseModel instance without arguments
         bm1 = BaseModel()
-        # Call the .to_dict() method on the first instance to get a dictionary representation
+        # Call the .to_dict() method on the first instance to get a dictionary
+        # representation
         bm1_dict = bm1.to_dict()
-        # Use the dictionary obtained from .to_dict() to create the second BaseModel instance
+        # Use the dictionary obtained from .to_dict() to create the second
+        # BaseModel instance
         bm2 = BaseModel(**bm1_dict)
         # Check if the IDs of bm1 and bm2 are the same
         self.assertEqual(bm1.id, bm2.id)
@@ -93,6 +97,7 @@ class TestBaseModel(unittest.TestCase):
     def test_storage_instance(self):
         # Check if storage is an instance of FileStorage
         self.assertIsInstance(storage, FileStorage)
+
 
 if __name__ == '__main__':
     unittest.main()

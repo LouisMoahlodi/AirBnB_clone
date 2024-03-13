@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 import uuid
 from datetime import datetime
-import models 
+import models
+
 
 class BaseModel:
     """
@@ -27,7 +28,6 @@ class BaseModel:
         attributes to the current datetime.
         """
 
-
         # Check if kwargs is not empty
         if kwargs:
             # Iterate through the key-value pairs in kwargs
@@ -37,7 +37,7 @@ class BaseModel:
                     date_obj = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                     self.__dict__[attr] = value
 
-                else: 
+                else:
                     # Set attribute dynamically
                     self.__dict__[attr] = value
         else:
@@ -45,7 +45,6 @@ class BaseModel:
             self.__dict__['id'] = str(uuid.uuid4())
             self.__dict__['created_at'] = datetime.now()
             self.__dict__['updated_at'] = datetime.now()
-            
 
     def __str__(self):
         """
@@ -74,16 +73,14 @@ class BaseModel:
         """
         # Add instance attributes to the dictionary
         obj_dict = self.__dict__.copy()
-        
+
         # Remove the __class__ attribute if present
         obj_dict.pop('__class__', None)
-        
+
         # Convert creation time to ISO format string
         obj_dict['created_at'] = self.created_at.isoformat()
-        
+
         # Convert update time to ISO format string
         obj_dict['updated_at'] = self.updated_at.isoformat()
-    
-        return obj_dict
 
-    
+        return obj_dict

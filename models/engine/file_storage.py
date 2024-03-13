@@ -5,6 +5,7 @@ import json
 import os
 import datetime
 
+
 class FileStorage:
     """Class for serializing instances to a JSON file and deserializing JSON file to instances."""
 
@@ -14,7 +15,7 @@ class FileStorage:
     def all(self):
         """Return a dictionary of all objects."""
         return FileStorage.__objects
-    
+
     def new(self, obj):
         """Add a new object to the storage."""
         key = "{}.{}".format(obj.__class__.__name__, obj.id)
@@ -23,7 +24,8 @@ class FileStorage:
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
         with open(FileStorage.__file_path, 'w') as f:
-            json.dump({key: value for key, value in FileStorage.__objects.items()}, f)
+            json.dump(
+                {key: value for key, value in FileStorage.__objects.items()}, f)
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
