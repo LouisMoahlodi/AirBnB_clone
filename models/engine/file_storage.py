@@ -7,7 +7,8 @@ import datetime
 
 
 class FileStorage:
-    """Class for serializing instances to a JSON file and deserializing JSON file to instances."""
+    """Class for serializing instances to a JSON file and 
+    deserializing JSON file to instances."""
 
     __file_path = "file.json"
     __objects = {}
@@ -25,7 +26,8 @@ class FileStorage:
         """Serialize __objects to the JSON file __file_path."""
         with open(FileStorage.__file_path, 'w') as f:
             json.dump(
-                {key: value for key, value in FileStorage.__objects.items()}, f)
+                {key: value for key, value in 
+                 FileStorage.__objects.items()}, f)
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
