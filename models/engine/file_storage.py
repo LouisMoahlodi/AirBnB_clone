@@ -20,7 +20,7 @@ class FileStorage:
     def new(self, obj):
         """Add a new object to the storage."""
         key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        FileStorage.__objects[key] = obj
+        FileStorage.__objects[key] = obj.to_dict()
 
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
