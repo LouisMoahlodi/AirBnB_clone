@@ -1,53 +1,56 @@
 #!/usr/bin/python3
 import unittest
-from models import storage
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 import os
 
-
 class TestFileStorage(unittest.TestCase):
     def setUp(self):
-        self.file_storage = FileStorage()
-        self.base_model = BaseModel()
-        self.base_model_dict = self.base_model.to_dict()
+        self.storage = FileStorage()
+        self.obj1 = BaseModel()
+        self.obj2 = BaseModel()
+        self.obj3 = BaseModel()
+        self.obj1.save()
+        self.obj2.save()
+        self.obj3.save()
 
     def tearDown(self):
-        try:
-            os.remove("file.json")
-        except FileNotFoundError:
-            pass
+        os.remove(FileStorage._FileStorage__file_path)
+
+    def test__file_path(self):
+        self.assertIsInstance(FileStorage._FileStorage__file_path, str)
+        self.assertEqual(FileStorage._FileStorage__file_path, "file.json")
+
+    def test__objects(self):
+        self.assertIsInstance(FileStorage._FileStorage__objects, dict)
+        self.assertEqual(len(FileStorage._FileStorage__objects), 3)
 
     def test_all(self):
-        # Test if all() returns the dictionary __objects
-        objects = self.file_storage.all()
-        self.assertEqual(objects, {})
+        all_objs = self.storage.all()
+        self.assertIsInstance(all_objs, dict)
+        self.assertEqual(len(all_objs), 3)
+        self.assertIn('BaseModel.' + self.obj1.id, all_objs)
+        self.assertIn('BaseModel.' + self.obj2.id, all_objs)
+        self.assertIn('BaseModel.' + self.obj3.id, all_objs)
 
     def test_new(self):
-        # Test if new() sets in __objects the obj with key <obj class name>.id
-        self.file_storage.new(self.base_model)
-        objects = self.file_storage.all()
-        self.assertIn("BaseModel." + self.base_model.id, objects)
-        self.assertEqual(objects["BaseModel." +
-                                 self.base_model.id], self.base_model_dict)
+        obj4 = BaseModel()
+        self.storage.new(obj4)
+        self.assertIn('BaseModel.' + obj4.id, self.storage.all())
 
-    def test_save(self):
-        # Test if save() serializes __objects to the JSON file (path:
-        # __file_path)
-        self.file_storage.new(self.base_model)
-        self.file_storage.save()
-        self.assertTrue(os.path.exists("file.json"))
-
-    def test_reload(self):
-        # Test if reload() deserializes the JSON file to __objects
-        self.file_storage.new(self.base_model)
-        self.file_storage.save()
-        self.file_storage.reload()
-        objects = self.file_storage.all()
-        self.assertIn("BaseModel." + self.base_model.id, objects)
-        self.assertEqual(objects["BaseModel." +
-                                 self.base_model.id], self.base_model_dict)
-
+    def test_save_and_reload(self):
+        # Save objects
+        self.storage.save()
+        # Clear objects
+        self.storage._FileStorage__objects = {}
+        # Reload objects
+        self.storage.reload()
+        all_objs = self.storage.all()
+        self.assertIsInstance(all_objs, dict)
+        self.assertEqual(len(all_objs), 3)
+        self.assertIn('BaseModel.' + self.obj1.id, all_objs)
+        self.assertIn('BaseModel.' + self.obj2.id, all_objs)
+        self.assertIn('BaseModel.' + self.obj3.id, all_objs)
 
 if __name__ == '__main__':
     unittest.main()
