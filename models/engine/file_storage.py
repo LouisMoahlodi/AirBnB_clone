@@ -33,22 +33,24 @@ class FileStorage:
         """Deserialize the JSON file __file_path to __objects, if it exists."""
         try:
             with open(FileStorage.__file_path, 'r') as f:
-                loaded_objects = json.load(f)
-                for key, value in loaded_objects.items():
-                    class_name, obj_id = key.split('.')
-                    # Dynamically get the class using globals()
-                    cls = globals()[class_name]
-                    # Instantiate the class using the loaded dictionary
-                    obj = cls(**value)
-                    # Add the object to the __objects dictionary
-                    FileStorage.__objects[key] = obj
+                FileStorage.__objects = json.load(f)
         except FileNotFoundError:
             pass
-
+            
     # def reload(self):
     #     """Deserialize the JSON file __file_path to __objects, if it exists."""
     #     try:
     #         with open(FileStorage.__file_path, 'r') as f:
-    #             FileStorage.__objects = json.load(f)
+    #             loaded_objects = json.load(f)
+    #             for key, value in loaded_objects.items():
+    #                 class_name, obj_id = key.split('.')
+    #                 # Dynamically get the class using globals()
+    #                 cls = globals()[class_name]
+    #                 # Instantiate the class using the loaded dictionary
+    #                 obj = cls(**value)
+    #                 # Add the object to the __objects dictionary
+    #                 FileStorage.__objects[key] = obj
     #     except FileNotFoundError:
     #         pass
+
+    
