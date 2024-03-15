@@ -71,15 +71,12 @@ class BaseModel:
         Returns:
         dict: Dictionary representation of the BaseModel instance.
         """
+        # Include class name in the dictionary
+        obj_dict = {'__class__': self.__class__.__name__}
         # Add instance attributes to the dictionary
-        obj_dict = self.__dict__.copy()
-
-        # Remove the __class__ attribute if present
-        obj_dict.pop('__class__', None)
-
+        obj_dict.update(self.__dict__)
         # Convert creation time to ISO format string
         obj_dict['created_at'] = self.created_at.isoformat()
-
         # Convert update time to ISO format string
         obj_dict['updated_at'] = self.updated_at.isoformat()
 
