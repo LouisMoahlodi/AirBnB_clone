@@ -35,7 +35,7 @@ class BaseModel:
                 # Convert created_at and updated_at strings to datetime objects
                 if attr in ['created_at', 'updated_at']:
                     date_obj = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                    self.__dict__[attr] = value
+                    self.__dict__[attr] = date_obj
 
                 else:
                     # Set attribute dynamically
@@ -45,6 +45,7 @@ class BaseModel:
             self.__dict__['id'] = str(uuid.uuid4())
             self.__dict__['created_at'] = datetime.now()
             self.__dict__['updated_at'] = datetime.now()
+            # Add the new instance to storage if it's not from a dictionary representation
             storage.new(self)
 
     def __str__(self):
