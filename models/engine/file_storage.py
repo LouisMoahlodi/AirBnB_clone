@@ -4,6 +4,7 @@
 import json
 import os
 import datetime
+import importlib
 
 
 class FileStorage:
@@ -33,4 +34,10 @@ class FileStorage:
         """Deserialize the JSON file __file_path to __objects, if it exists."""
         if os.path.exists(FileStorage.__file_path):
             with open(FileStorage.__file_path, 'r', encoding="utf-8") as f:
-                FileStorage.__objects = json.load(f)
+                data = json.load(f)
+                for key, value in data.items():
+                    class_name, obj_id = key.split('.')
+                    module_name = 'models.'  + class_name.lower()
+                    cls = getattr(importlib.import_module(module_name), class_name)
+                    obj = cls(**value)
+                    FileStorage.__objects[key] = obj 
