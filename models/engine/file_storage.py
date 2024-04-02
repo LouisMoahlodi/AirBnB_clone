@@ -2,7 +2,6 @@
 """Module for FileStorage class."""
 
 import json
-import os
 import datetime
 
 from models.base_model import BaseModel
@@ -29,13 +28,28 @@ class FileStorage:
             dict_storage = {}
             for key, value in self.__objects.items():
                 dict_storage[key] = value.to_dict()
-            json.dump(dict_storage, f)
+            json.dump(dict_storage, f)  
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
         try:
             with open(self.__file_path, encoding="utf-8") as f:
-                for obj in json.load(f).values():
+                file_contents = f.read()
+                # Check if the file is empty
+                if not file_contents:
+                    print("JSON file is empty.")
+                    return
+
+                try:
+                    data = json.loads(file_contents)
+                except json.decoder.JSONDecodeError:
+                    # Handle the case of invalid JSON syntax
+                    print("JSON file contains invalid syntax.")
+                    return
+
+                # Process the loaded data
+                for obj in data.values():
                     self.new(eval(obj["__class__"])(**obj))
         except FileNotFoundError:
-            return 
+            return
+
