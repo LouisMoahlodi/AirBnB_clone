@@ -3,8 +3,8 @@
 
 import json
 import os
-import datetime
-import importlib
+
+from models.base_model import BaseModel
 
 class FileStorage:
     """Class for serializing instances to a JSON file and
@@ -15,28 +15,26 @@ class FileStorage:
 
     def all(self):
         """Return a dictionary of all objects."""
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """Add a new object to the storage."""
         key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        FileStorage.__objects[key] = obj.to_dict()
+        self.__objects[key] = obj.to_dict()
 
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
-        with open(FileStorage.__file_path, 'w') as f:
-            json.dump(
-                {key: value for key, value in
-                 FileStorage.__objects.items()}, f)
+        with open(self.__file_path, 'w') as f:
+            dict_storage = {}
+            for key, value in self.__objects.items():
+                dict_storage[key] = value.to_dict()
+            json.dump(dict_storage, f)
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
-        if os.path.exists(FileStorage.__file_path):
-            with open(FileStorage.__file_path, 'r', encoding="utf-8") as f:
-                data = json.load(f)
-                for key, value in data.items():
-                    class_name, obj_id = key.split('.')
-                    module_name = 'models.'  + class_name.lower()
-                    cls = getattr(importlib.import_module(module_name), class_name)
-                    obj = cls(**value)
-                    FileStorage.__objects[key] = obj 
+        try:
+            with open(self.__file_path, encoding="utf-8") as f:
+                for obj in json.load(f).values():
+                    self.new(eval(obj["__class__"])(**obj))
+        except FileNotFoundError:
+            return 
