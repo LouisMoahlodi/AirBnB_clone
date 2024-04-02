@@ -1,11 +1,10 @@
-#!/usr/bin/python3
+
 """Module for FileStorage class."""
 
 import json
 import os
 import datetime
 import importlib
-from models.base_model import BaseModel
 
 class FileStorage:
     """Class for serializing instances to a JSON file and

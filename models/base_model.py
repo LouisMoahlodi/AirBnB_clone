@@ -25,7 +25,7 @@ class BaseModel:
         Sets the id attribute to a unique UUID, created_at and updated_at
         attributes to the current datetime.
         """
-
+        from models import storage
         # Check if kwargs is not empty
         if kwargs:
             # Iterate through the key-value pairs in kwargs
@@ -43,6 +43,7 @@ class BaseModel:
             self.__dict__['id'] = str(uuid.uuid4())
             self.__dict__['created_at'] = datetime.now()
             self.__dict__['updated_at'] = datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """
@@ -53,10 +54,11 @@ class BaseModel:
         """
         return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
 
-    def save(self, storage):
+    def save(self):
         """
         Updates the updated_at attribute with the current datetime.
         """
+        from models import storage
         # Update update time to current time
         self.updated_at = datetime.now()
         storage.save()
