@@ -1,84 +1,62 @@
 #!/usr/bin/python3
-import uuid
-from datetime import datetime
+"""Defines the BaseModel class"""
 import models
-from models import storage
+from uuid import uuid4
+from datetime import datetime
 
 class BaseModel:
     """
-    BaseModel class represents a base model for other classes.
-
-    Attributes:
-        id (str): Unique identifier for each instance.
-        created_at (datetime): Time when an instance is created.
-        updated_at (datetime): Time when an instance is updated.
-
-    Methods:
-        __init__: Initializes a new BaseModel instance.
-        __str__: Returns a string representation of the BaseModel instance.
-        save: Updates the updated_at attribute with the current datetime.
-        to_dict: Returns a dictionary representation of the BaseModel instance.
-    """
+    Represents the BaseModel of the Holberton AirBnB project."""
 
     def __init__(self, *args, **kwargs):
         """
         Initializes a new BaseModel instance.
 
-        Sets the id attribute to a unique UUID, created_at and updated_at
-        attributes to the current datetime.
+        Args:
+            *args: Unused
+            **kwargs (dict): Key/Values pairs of attributes
         """
+        tform = "%Y-%m-%dT%H:%S.%f"
+        self.id = str(uuid.uuid4())
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
 
         # Check if kwargs is not empty
-        if kwargs:
+        if len(kwargs) != 0:
             # Iterate through the key-value pairs in kwargs
             for attr, value in kwargs.items():
                 # Convert created_at and updated_at strings to datetime objects
-                if attr in ['created_at', 'updated_at']:
-                    date_obj = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
-                    self.__dict__[attr] = date_obj
-
-                else:
+                if attr == "created_at" or attr == 'updated_at':
+                    self.__dict__[attr] = datetime.strptime(value, tform)
+                else: 
                     # Set attribute dynamically
                     self.__dict__[attr] = value
+
         else:
-            # If kwargs is empty, create id and created_at attributes
-            self.__dict__['id'] = str(uuid.uuid4())
-            self.__dict__['created_at'] = datetime.now()
-            self.__dict__['updated_at'] = datetime.now()
-            # Add the new instance to storage if it's not from a dictionary representation
-            storage.new(self)
-
-    def __str__(self):
-        """
-        Returns a string representation of the BaseModel instance.
-
-        Returns:
-            str: String representation of the BaseModel instance.
-        """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+            models.storage.new(self)
 
     def save(self):
         """
         Updates the updated_at attribute with the current datetime.
         """
-        # Update update time to current time
-        self.updated_at = datetime.now()
-        storage.save()
+        self.updated_at = datetime.today()
+        models.storage.save()
 
     def to_dict(self):
         """
         Returns a dictionary representation of the BaseModel instance.
-
-        Returns:
-        dict: Dictionary representation of the BaseModel instance.
         """
-        # Include class name in the dictionary
-        obj_dict = {'__class__': self.__class__.__name__}
-        # Add instance attributes to the dictionary
-        obj_dict.update(self.__dict__)
-        # Convert creation time to ISO format string
+        
+        obj_dict = self.__dict__.copy()
         obj_dict['created_at'] = self.created_at.isoformat()
-        # Convert update time to ISO format string
         obj_dict['updated_at'] = self.updated_at.isoformat()
+        obj_dict["__class__"] = self.__class__.__name__
 
         return obj_dict
+    
+    def __str__(self):
+        """
+        Returns a string representation of the BaseModel instance.
+        """
+        clname = self.__class__.__name__
+        return "[{}] ({}) {}".format(clname, self.id, self.dict)
