@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+
 """Module for FileStorage class."""
 
 import json
@@ -12,35 +12,28 @@ class FileStorage:
 
     def all(self):
         """Return a dictionary of all objects."""
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """Add a new object to the storage."""
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        self.__objects[key] = obj
+        ocname = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] =obj
 
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
-        with open(self.__file_path, 'w') as f:
-            dict_storage = {key: obj.to_dict() for key, obj in self.__objects.items()}
+        odict = FileStorage.__objects
+        dict_storage = {obj: odict[obj].to_dict() for obj in odict.keys()}
+        with open(FileStorage.__file_path, 'w') as f:
             json.dump(dict_storage, f)
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
         try:
-            with open(self.__file_path, encoding="utf-8") as f:
-                file_contents = f.read()
-                if not file_contents.strip():
-                    print("JSON file is empty.")
-                    return
-
-                try:
-                    data = json.loads(file_contents)
-                except json.JSONDecodeError:
-                    print("JSON file contains invalid syntax.")
-                    return
-
-                for obj in data.values():
-                    self.new(eval(obj["__class__"])(**obj))
+            with open(FileStorage.__file_path) as f:
+                dict_storage = json.load(f)
+                for obj in dict_storage.values():
+                    cls_name = obj["__class__"]
+                    del obj["__class__"]
+                    self.new(eval(cls_name)(**obj))
         except FileNotFoundError:
             pass
